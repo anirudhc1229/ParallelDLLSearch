@@ -38,9 +38,7 @@ class DoublyLinkedList:
         self.tail = new_node
 
     def search_seq(self, goal):
-
         start = time.time()
-        
         cur = self.head
         i = 0
         while cur:
@@ -49,11 +47,7 @@ class DoublyLinkedList:
                 print(f'sequential search time: {end - start}')
                 return i
             cur = cur.next
-            i += 1
-        
-        end = time.time()
-        print(f'sequential search time: {end - start}')
-        
+            i += 1   
         return -1
 
     def search_par(self, goal):
@@ -67,21 +61,15 @@ class DoublyLinkedList:
         fwd_proc = multiprocessing.Process(target=self._search_fwd, args=(goal, mgr_idx, mgr_found, lock))
         rev_proc = multiprocessing.Process(target=self._search_rev, args=(goal, mgr_idx, mgr_found, lock))
 
-        start = time.time()
-        
         fwd_proc.start()
         rev_proc.start()
 
         fwd_proc.join()
         rev_proc.join()
 
-        end = time.time()
-        print(f'parallel search time: {end - start}')
-
         return mgr_idx.value
 
     def _search_fwd(self, goal, mgr_idx, mgr_found, lock):
-        start = time.time()
         cur = self.head
         i = 0
         while cur and not mgr_found.value:
@@ -91,11 +79,8 @@ class DoublyLinkedList:
                     mgr_idx.value = i
             cur = cur.next
             i += 1
-        end = time.time()
-        print(f'fwd_proc search time: {end - start}')
 
     def _search_rev(self, goal, mgr_idx, mgr_found, lock):
-        start = time.time()
         cur = self.tail
         i = self.length - 1
         while cur and not mgr_found.value:
@@ -105,8 +90,6 @@ class DoublyLinkedList:
                     mgr_idx.value = i
             cur = cur.prev
             i -= 1
-        end = time.time()
-        print(f'rev_proc search time: {end - start}')
 
     def print_fwd(self):
         cur = self.head
